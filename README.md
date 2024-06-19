@@ -16,7 +16,7 @@ Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folk
 
 ## Use the code
 
-You should define a non convex separable problem by creating a children of the `NonConvexProblem` class defined in `code/non_convex_problem.py` and implementing the required functions.
+You should define a non convex separable problem by creating a child of the `NonConvexProblem` class defined in `code/non_convex_problem.py` and implementing the required functions.
 You can use the file `UnitCommitmentSquared/unit_commitment.py` as template.
 
 You can then run the first conditional gradient stage defined in `code/frank_wolfe_1.py`, followed by the Caratheodory step, defined in `sparsify_constructive.py` (exact Caratheodory) or in `sparsify_frank_wolfe.py` (approximate Caratheodory).
