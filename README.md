@@ -2,7 +2,9 @@
 
 This repository contains code from solving nonconvex separable optimization problems of the form
 ```
+$$
 \min_x \sum_{i=1}^n f_i(x_i)
+$$
 ```
 .
 
