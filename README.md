@@ -1,4 +1,4 @@
-# 
+# Non Convex Separable Optimization via Frank-Wolfe and Caratheodory. 
 
 This repository contains code from solving nonconvex separable optimization problems of the form
 ```math
