@@ -54,9 +54,7 @@ def run_experiment(n=50, N=10, nb_experiments=10):
                 max_rho_fi = rho_i if rho_i > max_rho_fi else max_rho_fi
     
             #======================= Run first conditional Gradient method =======================
-            x_start = np.ones((uc_prob.di, uc_prob.n))
-            for i in range(uc_prob.n):
-                x_start[uc_prob.N:, i] = uc_prob.max_gen[i]
+            x_start = uc_prob.get_feasible_point() # or initiate other feasible point
             K = 10000
             print(v_star_rho)
             z_K, grad_norm_list, y_dic, = frank_wolfe_1(v_star_rho, uc_prob.b_bar, K, uc_prob, x_start, verbose=True)
