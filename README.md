@@ -8,31 +8,21 @@ This repository contains code for solving nonconvex separable optimization probl
 ```
 where the functions $f_i$ and their domains $\text{dom}(f_i)$ need not be convex.
 
+The full theoretical background can be found in our paper:
 
 Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints". In: arXiv preprint arXiv:2401.09961.
 
 [[Paper]](https://arxiv.org/abs/2401.09961)
 
-## Installation
-
-Once you have downloaded the repository, we suggest creating a `conda` environment named `phase_unwrapping`.
-```
-conda env create -f environment.yml
-conda activate phase_unwrapping
-```
-We also provide a `requirements.txt` file for users wishing to use another virtual environment manager.
-
-Once this is done, you need to compile SNAPHU. This step is not necessary if you plan to use your own weights or uniform weights in your objective function. However SNAPHU generated weights have shown good practical performance, so we encourage using them. In the root directory, run the following.
+## 
 
 ## Reproduce experiments
 
-To reproduce the experiments from the paper, run the `UnitCommitmentSquared/` directory:
+To reproduce the experiments from the paper, run the following in the `UnitCommitmentSquared/` directory:
 
 ```
 $ python script.py
 ```
-
-This will load simulated and real images from a region in Lebanon from the `data` folder. It will then unwrap the images using the IRLS algorithm, and write the output to a `results` folder.
 
 ## Citing our work
 
