@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(1, '/home/bpauldub/ShapleyFolkman/code/')
+sys.path.insert(1, '../code/')
 from non_convex_problem import NonConvexProblem
 import numpy as np
 
