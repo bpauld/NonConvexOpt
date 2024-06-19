@@ -1,9 +1,9 @@
 # 
 
 This repository contains code from solving nonconvex separable optimization problems of the form
-$$
+```
 \min_x \sum_{i=1}^n f_i(x_i)
-$$
+```
 .
 
 Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints". In: arXiv preprint arXiv:2401.09961.
