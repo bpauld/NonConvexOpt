@@ -24,7 +24,7 @@ You can use the file `UnitCommitmentSquared/script.py` as template.
 
 ## Reproduce experiments
 
-To reproduce the experiments from the paper, run the following in the `UnitCommitmentSquared/` directory:
+To reproduce the experiments on the Unit Commitment problem from the paper, run the following in the `UnitCommitmentSquared/` directory:
 
 ```
 $ python script.py
