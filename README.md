@@ -3,7 +3,7 @@
 This repository contains code from solving nonconvex separable optimization problems of the form
 ```math
 \begin{split}
-\min_x \quad &\sum_{i=1}^n f_i(x_i) \\ &\text{ subject to } \quad Ax \leq b \\ &x_i \in \text{dom}(f_i), \quad i=1,\dots, n
+\min_x \quad &\sum_{i=1}^n f_i(x_i) \\ \text{ subject to } \quad &Ax \leq b \\ &x_i \in \text{dom}(f_i), \quad i=1,\dots, n
 \end{split}
 ```
 .
