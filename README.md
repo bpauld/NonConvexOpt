@@ -10,7 +10,7 @@ where the functions $f_i$ and their domains $\text{dom}(f_i)$ need not be convex
 
 The full theoretical background can be found in our paper:
 
-Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints". In: arXiv preprint arXiv:2401.09961.
+Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints". In: arXiv preprint.
 
 
 ## Use the code
