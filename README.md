@@ -12,7 +12,6 @@ The full theoretical background can be found in our paper:
 
 Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints". In: arXiv preprint arXiv:2401.09961.
 
-[[Paper]](https://arxiv.org/abs/2401.09961)
 
 ## Use the code
 
@@ -34,10 +33,5 @@ $ python script.py
 
 To cite our our work please use:
 ```
-@article{dubois2024iteratively,
-  title={Iteratively Reweighted Least Squares for Phase Unwrapping},
-  author={Dubois-Taine, Benjamin and Akiki, Roland and d'Aspremont, Alexandre},
-  journal={arXiv preprint arXiv:2401.09961},
-  year={2024}
-}
+
 ```
