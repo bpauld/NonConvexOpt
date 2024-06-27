@@ -7,7 +7,8 @@ This repository contains code for solving nonconvex separable optimization probl
 \end{split}
 ```
 with $A \in \mathbb{R}^{m \times n}$ and $b \in \mathbb{R}^m$. It is specifically aimed at cases where $n >> m$. 
-The functions $f_i$ and their domains $\text{dom}(f_i)$ need \textbf{not} be convex.
+
+The functions $f_i$ and their domains $\text{dom}(f_i)$ need **not** be convex.
 
 The full theoretical background can be found in our paper:
 
