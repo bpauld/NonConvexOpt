@@ -6,7 +6,8 @@ This repository contains code for solving nonconvex separable optimization probl
 \min_x \quad &\sum_{i=1}^n f_i(x_i) \\ \text{ subject to } \quad &Ax \leq b \\ &x_i \in \text{dom}(f_i), \quad i=1,\dots, n,
 \end{split}
 ```
-with $A \in \mathbb{R}^{m \times n}$ the functions $f_i$ and their domains $\text{dom}(f_i)$ need not be convex.
+with $A \in \mathbb{R}^{m \times n}$ and $b \in \mathbb{R}^m$. It is specifically aimed at cases where $n >> m$. 
+The functions $f_i$ and their domains $\text{dom}(f_i)$ need \textbf{not} be convex.
 
 The full theoretical background can be found in our paper:
 
