@@ -37,5 +37,10 @@ $ python script.py
 
 To cite our our work please use:
 ```
-
+@article{dubois2024frank,
+  title={Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints},
+  author={Dubois-Taine, Benjamin and d'Aspremont, Alexandre},
+  journal={arXiv preprint arXiv:2406.18282},
+  year={2024}
+}
 ```
