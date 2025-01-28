@@ -1,4 +1,6 @@
 import numpy as np
+import time
+from convex_hull_optimization import optimize_over_convex_hull
 
 def clean_dictionary(y_dic):
     new_dic = {}
@@ -11,12 +13,9 @@ def clean_dictionary(y_dic):
 
 
 def frank_wolfe_1(optimal_value_dual, b,
-                 K, prob, x_start, verbose=True):
-
+                 K, prob, x_start, keep_stepsizes=True, verbose=True):
     n = prob.n
     m = prob.m
-    di = prob.di # for now we assume that all component dimension d_i are the same 
-    #di = x_start.shape[0]
     
     z_star = np.zeros(1 + m)
     z_star[0] = optimal_value_dual
@@ -26,19 +25,22 @@ def frank_wolfe_1(optimal_value_dual, b,
     x_start_col = x_start.reshape((-1, ), order='F')    
     z_k = np.zeros(1 + m)
     z_k[0] = prob.f(x_start)
-    A = prob.construct_A_matrix()
-    z_k[1:] = A.dot(x_start_col)
+    z_k[1:] = prob.compute_A_dot_x(x_start)
 
     pointer = 0
     y_dic = {}
     for i in range(n):
-        y_dic[i] = [np.zeros((di, 1)), 1, np.zeros(K), -1]      
-        y_dic[i][0][:, 0] = x_start[:, i]
-        y_dic[i][2][0] = 1
+        y_dic[i] = np.zeros((prob.get_di(i), K))
+        y_dic[i][:, 0] = x_start[:, i]
+    etas_list = np.zeros(K)
+    etas_list[0] = 1
 
     grad_norm_list = []
     g_k = 0
+
     
+    total_time_lmo = 0
+    start_time = time.time()
     
     for k in range(1, K):
         grad_k = np.clip(z_k - z_star, 0.0, None)
@@ -49,31 +51,25 @@ def frank_wolfe_1(optimal_value_dual, b,
         grad_norm_list.append(grad_norm)
 
         if verbose:
-            if k%100 == 0 or k==0:
+            frequency = int(K / 10)
+            if k%frequency == 0 or k==0:
                 print(f"Iteration {k} : ||z_k - z*||_+^2 = {grad_k_0**2} + { np.linalg.norm(grad_k_rest)**2}")
-                print(f"     ||grad(z_k)|| = {grad_norm}")
+                print(f"     ||grad(z_k)|| = {grad_norm}, Time = {time.time() - start_time}, Total time LMO = {total_time_lmo}")
         
-        s_k = np.zeros(1 + m)
+        start_time_lmo = time.time()
+        y_k = prob.lmo_1(grad_k_0, grad_k_rest)
+
+        f_biconjugate_yk = prob.f(y_k)             
+        A_dot_yk = prob.compute_A_dot_x(y_k)
+        s_k = np.concatenate(([f_biconjugate_yk], A_dot_yk))
+        total_time_lmo += time.time() - start_time_lmo
 
         for i in range(n):
-            Ai = prob.construct_Ai_matrix(i)
-            ATi_dot_gk = Ai.T.dot(grad_k_rest)
-            y_ik = prob.lmo_1(i, grad_k_0, ATi_dot_gk)
-
-            f_biconjugate_ik = prob.f_i(i, y_ik)             
-            Ati_dot_y_ik = Ai.dot(y_ik)
-            s_k += np.concatenate(([f_biconjugate_ik], Ati_dot_y_ik))
-
-            pointer_i = y_dic[i][1]
-            #get index of where in the array where the current y_ik is in the dic
-            # if it has not been seen before, this will return an empty array
-            matching_y_ik = np.where(True == np.all(y_dic[i][0][:, :pointer_i] == y_ik[:, None], axis=0))[0]
-            if matching_y_ik.shape[0] == 0:
-                y_dic[i][0] = np.concatenate((y_dic[i][0], y_ik.reshape(-1, 1)), axis=1)
-                y_dic[i][3] = -1
-                y_dic[i][1] += 1
+            y_ik = prob.get_y_ik(i, y_k)
+            if keep_stepsizes:
+                y_dic[i][:, k] = y_ik
             else:
-                y_dic[i][3] = matching_y_ik
+                y_dic[i][:, k] = y_ik
 
         d_k = s_k - z_k
         g_k = -grad_k.dot(d_k)
@@ -81,18 +77,117 @@ def frank_wolfe_1(optimal_value_dual, b,
         assert etak > 0
         
         #now update stepsize accounting
-        for i in range(n):
-            if y_dic[i][3] == -1:
-                #this means we just added a new point
-                y_dic[i][2] *= (1-etak)
-                y_dic[i][2][y_dic[i][1] - 1] = etak
-            else:
-                y_dic[i][2] *= (1-etak)
-                y_dic[i][2][y_dic[i][3]] += etak
+        if keep_stepsizes:
+            etas_list *= (1-etak)
+            etas_list[k] = etak
+            
+        
         
         z_k = (1 - etak) * z_k + etak * s_k               
 
+    if keep_stepsizes:
+        for i in range(n):
+            u, unique_indices, unique_inverse = np.unique(y_dic[i], axis=1, return_index=True, return_inverse=True)
+            etas = np.zeros(unique_indices.shape[0])
+            #print(unique_indices, unique_inverse)
+            for k in range(unique_inverse.shape[0]):
+                loc = unique_inverse[k]
+                etas[loc] += etas_list[k]
+            #return
+            y_dic[i] = [u, etas]
+    else:
+        for i in range(n):
+            #keep y_dic[i] in the same order, this helps LMO of the next FW ?
+            _, indices = np.unique(y_dic[i], axis=1, return_index=True)
+            #print(indices.shape)
+            y_dic[i] = [y_dic[i][:, np.sort(indices)], 0]
+            
+    return z_k, grad_norm_list, y_dic
 
-    y_dic = clean_dictionary(y_dic)
+
+
+def frank_wolfe_1_strongly_convex(optimal_value_dual, Ax_star,
+                 K, prob, x_start, tol=1e-2, verbose=True, keep_stepsizes=True):
+
+    n = prob.n
+    m = prob.m
+    
+    z_star = np.zeros(1 + m)
+    z_star[0] = optimal_value_dual
+    z_star[1:] = Ax_star
+    
+    z_k = np.zeros(1 + m)
+    z_k[0] = prob.f(x_start)
+    z_k[1:] = prob.compute_A_dot_x(x_start)
+
+
+    pointer = 0
+    y_dic = {}
+    for i in range(n):
+        y_dic[i] = np.zeros((prob.get_di(i), K))
+        y_dic[i][:, 0] = x_start[:, i]
+    
+    total_time_lmo = 0
+    start_time = time.time()
+    total_time_qp = 0
+
+    grad_norm_list = []
+    g_k = 0
+    active_set = [z_k]
+    
+    for k in range(1, K):
+        grad_k = z_k - z_star
+        grad_k_0 = grad_k[0]
+        grad_k_rest = grad_k[1:]
+
+        grad_norm = np.linalg.norm(grad_k)
+        grad_norm_list.append(grad_norm)
+
+        if verbose:
+            frequency = int(K / 10)
+            if k%frequency == 0 or k==0:
+                print(f"Iteration {k} : ||z_k - z*||_+^2 = {grad_k_0**2} + { np.linalg.norm(grad_k_rest)**2}")
+                print(f"     Time = {time.time() - start_time}, Total time LMO = {total_time_lmo}, Total time QP = {total_time_qp}, size active set = {len(active_set)}")
+
+        start_time_lmo = time.time()
+        y_k = prob.lmo_1_linear(grad_k_0, grad_k_rest)
+
+        f_biconjugate_yk = prob.f(y_k)             
+        A_dot_yk = prob.compute_A_dot_x(y_k)
+        s_k = np.concatenate(([f_biconjugate_yk], A_dot_yk))
+        total_time_lmo += time.time() - start_time_lmo
+        
+
+        for i in range(n):
+            y_ik = prob.get_y_ik(i, y_k)
+            if keep_stepsizes:
+                y_dic[i][:, k] = y_ik
+            else:
+                y_dic[i][:, k] = y_ik
+
+        #if s_k not in active_set:
+        active_set.append(s_k)       
+        start_time_qp = time.time()
+        z_k, etas_list = optimize_over_convex_hull(np.array(active_set).T, z_star)
+        total_time_qp += time.time() - start_time_qp
+        etas_list = np.where(etas_list < 0, 0, etas_list)
+
+
+    if keep_stepsizes:
+        for i in range(n):
+            u, unique_indices, unique_inverse = np.unique(y_dic[i], axis=1, return_index=True, return_inverse=True)
+            etas = np.zeros(unique_indices.shape[0])
+            #print(unique_indices, unique_inverse)
+            for k in range(unique_inverse.shape[0]):
+                loc = unique_inverse[k]
+                etas[loc] += etas_list[k]
+            #return
+            y_dic[i] = [u, etas]
+    else:
+        for i in range(n):
+            #keep y_dic[i] in the same order, this helps LMO of the next FW ?
+            _, indices = np.unique(y_dic[i], axis=1, return_index=True)
+            #print(indices.shape)
+            y_dic[i] = [y_dic[i][:, np.sort(indices)], 0]
             
     return z_k, grad_norm_list, y_dic

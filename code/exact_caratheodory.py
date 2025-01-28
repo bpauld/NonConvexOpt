@@ -14,11 +14,10 @@ def create_Z_matrix(y_dic, prob):
     corresponding_indices = []
     
     for i in range(n):
-        Ai = prob.construct_Ai_matrix(i)
         for k in range(y_dic[i][0].shape[1]):
             y_ik = y_dic[i][0][:, k]
             Z_matrix[0, counter] = prob.f_i(i, y_ik)
-            Z_matrix[1:m+1, counter] = Ai @ y_ik
+            Z_matrix[1:m+1, counter] = prob.compute_Ai_dot_y(i, y_ik)
             Z_matrix[m + 1 + i, counter] = 1
             eta_vector[counter] = y_dic[i][1][k]
             corresponding_indices.append((i, k))
@@ -62,7 +61,7 @@ def find_element_in_nullspace(Z, method='fastest'):
 
 
 
-def sparsify_solution_caratheodory(Z_matrix, eta_vector, corresponding_indices, max_iter=int(1e7), verbose=True):
+def sparsify_solution_exact_caratheodory(Z_matrix, eta_vector, corresponding_indices, max_iter=int(1e7), verbose=True):
 
     eta_vector_copy = eta_vector.copy()
     final_corresponding_indices = corresponding_indices.copy()
@@ -133,7 +132,7 @@ def sparsify_solution_caratheodory(Z_matrix, eta_vector, corresponding_indices, 
 
 
 
-def build_final_solution_caratheodory(y_dic, final_eta_vector, corresponding_indices):
+def build_final_solution_exact_caratheodory(y_dic, final_eta_vector, corresponding_indices):
     n = len(y_dic)
     di = y_dic[0][0].shape[0]
     y_final = np.zeros((di, n))
