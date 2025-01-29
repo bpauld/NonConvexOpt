@@ -18,4 +18,14 @@ Benjamin Dubois-Taine and Alexandre d'Aspremont. "Frank-Wolfe meets Shapley-Folk
 
 ## Use the code
 
-You should define 
+You should define a non convex separable problem by creating a child of the `NonConvexProblem` class defined in `code/non_convex_problem.py` and implementing the required functions. You can use the file `UnitCommitmentSquared/unit_commitment.py` as template.
+
+You can then run the first conditional gradient method defined in `code/frank_wolfe_1.py`, followed by the second Caratheodory step, define in `exact_caratheodory.py` or `approximate_caratheodory.py`. You can use the file `UnitCommitmentSquared/script.py` as template.
+
+## Reproduce experiments
+
+To reproduce the experiments on the Unit Commitment problem, run one of the following in `UnitCommitmentSquared` folder:
+
+``
+$ python script.py
+``
