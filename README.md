@@ -26,6 +26,17 @@ You can then run the first conditional gradient method defined in `code/frank_wo
 
 To reproduce the experiments on the Unit Commitment problem, run one of the following in `UnitCommitmentSquared` folder:
 
-``
+```
 $ python script.py
-``
+```
+or 
+```
+$ python script_runtime.py
+```
+
+To reproduce the experiments on the charging of electric vehicles problem, run the following in `PEVs` folder:
+```
+$ python script.py
+```
+
+You can use the jupyter notebooks to reproduce the plots.
