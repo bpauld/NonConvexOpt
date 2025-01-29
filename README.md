@@ -4,9 +4,9 @@ This repository contains code for solving nonconvex separable optimization probl
 
 $$
 \begin{align}
-\sum_{i=1}^n f_i(x_i) \\
-\text{subject to }  \sum_{i=1}^n A_i x_i \leq b \\
-x_i \in \text{dom}(f_i), \quad i=1, \dots, n
+\text{minimize } \ &\sum_{i=1}^n f_i(x_i) \\
+\text{subject to } \ &\sum_{i=1}^n A_i x_i \leq b \\
+&x_i \in \text{dom}(f_i), \quad i=1, \dots, n
 \end{align}
 $$
 
