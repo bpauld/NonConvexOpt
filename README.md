@@ -40,3 +40,16 @@ $ python script.py
 ```
 
 You can use the jupyter notebooks to reproduce the plots.
+
+## Citing our work
+
+To cite our work please use:
+
+```
+@article{dubois2024frank,
+  title={Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints},
+  author={Dubois-Taine, Benjamin and d'Aspremont, Alexandre},
+  journal={arXiv preprint arXiv:2406.18282},
+  year={2024}
+}
+```
