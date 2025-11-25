@@ -46,10 +46,12 @@ You can use the jupyter notebooks to reproduce the plots.
 To cite our work please use:
 
 ```
-@article{dubois2024frank,
+@article{dubois2025frank,
   title={Frank-Wolfe meets Shapley-Folkman: a systematic approach for solving nonconvex separable problems with linear constraints},
-  author={Dubois-Taine, Benjamin and d'Aspremont, Alexandre},
-  journal={arXiv preprint arXiv:2406.18282},
-  year={2024}
+  author={Dubois-Taine, Benjamin and d’Aspremont, Alexandre},
+  journal={Mathematical Programming},
+  pages={1--51},
+  year={2025},
+  publisher={Springer}
 }
 ```
